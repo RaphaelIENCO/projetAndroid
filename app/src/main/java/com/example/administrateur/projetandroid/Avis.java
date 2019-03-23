@@ -5,7 +5,6 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 
-import java.util.Date;
 
 @Entity(tableName = "avis")
 public class Avis {
@@ -13,8 +12,11 @@ public class Avis {
     @PrimaryKey(autoGenerate = true)
     private int aid;
 
+    @ColumnInfo(name = "username")
+    private String username;
+
     @ColumnInfo(name = "date")
-    private Date date;
+    private String date;
 
     @ColumnInfo(name = "note")
     private int note;
@@ -30,11 +32,11 @@ public class Avis {
         this.aid = aid;
     }
 
-    public Date getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(String date) {
         this.date = date;
     }
 
@@ -54,15 +56,25 @@ public class Avis {
         this.avis = avis;
     }
 
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
     @Ignore
-    public Avis(int aid, Date date, int note, String avis) {
+    public Avis(int aid, String username, String date, int note, String avis) {
         this.aid = aid;
+        this.username = username;
         this.date = date;
         this.note = note;
         this.avis = avis;
     }
 
-    public Avis(Date date, int note, String avis) {
+    public Avis(String username, String date, int note, String avis) {
+        this.username = username;
         this.date = date;
         this.note = note;
         this.avis = avis;

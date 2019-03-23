@@ -2,11 +2,19 @@ package com.example.administrateur.projetandroid;
 
 import android.content.Context;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -28,6 +36,11 @@ public class AvisFragment extends Fragment {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+
+    private List<Avis> avisList = new ArrayList<>();
+    private RecyclerView recyclerView;
+    private AppAvisbase appdb;
+    private AvisDAO avisDAO;
 
     public AvisFragment() {
         // Required empty public constructor
@@ -63,9 +76,34 @@ public class AvisFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_my_avis, container, false);
+        View v = inflater.inflate(R.layout.fragment_my_avis, container, false);
+        recyclerView = v.findViewById(R.id.avis_recycler_view);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.addItemDecoration(new DividerItemDecoration(getContext(),
+                LinearLayoutManager.VERTICAL));
+//        recyclerView.setAdapter(new AvisListAdapteur(avisList));
+        appdb = AppAvisbase.getAvisbase(getContext());
+        avisDAO = appdb.avisDAO();
+        prepareCharacterData();
+
+        (new GetAllAvisAsyncTask(avisDAO)).execute();
+        return v;
     }
+
+    private void prepareCharacterData() {
+        Avis avis1, avis2, avis3, avis4, avis5, avis6;
+        avis1 = new Avis("toto", "12/02/2019", 7,"Excellent service , rapidité efficacité  avec des pizzas diverses et de meilleures goût.\n" +
+                "Bref excellent rapport prix qualité.\n" +
+                "A recommandé");
+        avis2 = new Avis("bob", "02/02/2019", 6,"Franchement avant c'était super livraison à l'heure qualité au rendez-vous maintenant c'est médiocre .. pizza arrive cramé , sec avec des ingrédients qui manque .. livraison super longue .. j'hesite à plus y aller");
+        avis3 = new Avis("Jean", "15/02/2019", 5,"Bon accueil");
+        avis4 = new Avis("Pascal", "30/03/2019", 8,"Les pizza sont bonne,mais la relation client et pas top,personnel souvent froid,ne répond pas au appel par moment,mais les prix sont corrects et on se régale a chaque fois");
+        avis5 = new Avis("Pierre", "21/01/2019", 7,"Super tacos, rapport qualité-prix excellent");
+        avis6 = new Avis("Sandrine", "17/10/2018", 7,"Très bon rapport qualité prix lieu propre est service rapide");
+        (new InsertAsyncTask(avisDAO)).execute(avis1, avis2, avis3, avis4, avis5, avis6);
+    }
+
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
@@ -105,4 +143,40 @@ public class AvisFragment extends Fragment {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
+
+    private class InsertAsyncTask extends AsyncTask<Avis, Void, Void> {
+        private AvisDAO dao;
+        InsertAsyncTask(AvisDAO dao) {
+            this.dao = dao;
+        }
+
+        @Override
+        protected Void doInBackground(Avis... avis) {
+            for (Avis a : avis) {
+                this.dao.insertAvis(a);
+            }
+            return null;
+        }
+    }
+
+    private class GetAllAvisAsyncTask extends AsyncTask<Void,Void,Void> {
+        private AvisDAO mAsyncTaskDao;
+        ArrayList<Avis> avis;
+
+        GetAllAvisAsyncTask(AvisDAO dao){
+            this.mAsyncTaskDao = dao;
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            avis = new ArrayList<>(mAsyncTaskDao.getAllAvis());
+            return null;
+        }
+        @Override
+        protected void onPostExecute(Void voids){
+            avisList = avis;
+            recyclerView.setAdapter(new AvisListAdapteur(avisList,getContext()));
+        }
+    }
+
 }
