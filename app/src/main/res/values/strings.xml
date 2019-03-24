@@ -23,7 +23,7 @@
     <string name="pref_default_display_name">John Smith</string>
 
     <string name="pref_search_delay_edit_text">Search Delay</string>
-    <string name="key_location_switch">key_notification_switch</string>
+    <string name="key_location_switch">key_location_switch</string>
     <string name="key_search_delay">key_search_delay</string>
     <string name="pref_search_radius_edit_text">Search Radius</string>
     <string name="key_search_radius">key_search_radius</string>

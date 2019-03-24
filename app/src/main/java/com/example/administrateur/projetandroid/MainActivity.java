@@ -22,7 +22,7 @@ public class MainActivity extends AppCompatActivity
         AvisFragment.OnFragmentInteractionListener{
 
     private FragmentManager fm = null;
-    private Fragment fragment = null;
+    private Fragment fragment = new HomeFragment();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,6 +95,9 @@ public class MainActivity extends AppCompatActivity
 
 
         switch(id){
+            case R.id.nav_home:
+                fragment = new HomeFragment();
+                break;
             case R.id.nav_map:
 //                fragment = new MyMapFragment();
                 break;
@@ -107,16 +110,6 @@ public class MainActivity extends AppCompatActivity
             default:
         }
 
-        if (id == R.id.nav_map) {
-            // Handle the camera action
-        } else if (id == R.id.nav_home) {
-
-        } else if (id == R.id.nav_avis) {
-            fragment = new AvisFragment();
-
-        } else if (id == R.id.nav_credits) {
-
-        }
 
         fm.beginTransaction().replace(R.id.content_main,fragment).commit();
 
