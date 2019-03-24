@@ -1,9 +1,11 @@
 package com.example.administrateur.projetandroid;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
@@ -15,6 +17,7 @@ import android.view.ViewGroup;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.prefs.PreferenceChangeEvent;
 
 
 /**
@@ -85,7 +88,14 @@ public class AvisFragment extends Fragment {
 //        recyclerView.setAdapter(new AvisListAdapteur(avisList));
         appdb = AppAvisbase.getAvisbase(getContext());
         avisDAO = appdb.avisDAO();
-        prepareCharacterData();
+//        prepareCharacterData();
+
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
+
+        if (! sp.getBoolean(getResources().getString(R.string.key_is_db_initialized),false)) {
+            prepareCharacterData();
+            sp.edit().putBoolean(getResources().getString(R.string.key_is_db_initialized),true).commit();
+        }
 
         (new GetAllAvisAsyncTask(avisDAO)).execute();
         return v;
