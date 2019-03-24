@@ -3,13 +3,13 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     >
 
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
         <LinearLayout
             android:orientation="horizontal"
@@ -35,11 +35,16 @@
         </LinearLayout>
 
         <TextView
+            android:id="@+id/text_view_avis"
             android:layout_width="match_parent"
-            android:layout_height="126dp"
-            android:text="AVIS  AVIS    AVIS    AVIS"
-            android:id="@+id/text_view_avis"/>
+            android:layout_height="wrap_content"
+            android:text="AVIS  AVIS    AVIS    AVIS" />
 
     </LinearLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/avis_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 </LinearLayout>
