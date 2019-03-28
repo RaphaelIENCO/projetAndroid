@@ -11,34 +11,34 @@
         android:layout_height="wrap_content">
 
         <LinearLayout
-            android:orientation="horizontal"
+            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical">
-            <TextView
-                android:text="Note  "
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:paddingRight="@dimen/nav_header_vertical_spacing"
-                android:id="@+id/text_view_note"/>
             <EditText
                 android:id="@+id/note_input"
+                android:text="Note (/10):"
                 android:layout_height="wrap_content"
                 android:layout_width="match_parent"
                 android:inputType="number"/>
-            <TextView
+            <EditText
+                android:id="@+id/date_input"
                 android:text="Date  "
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:paddingRight="@dimen/nav_header_vertical_spacing"
-                android:id="@+id/text_view_date"/>
+                android:inputType="date"/>
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/text_view_avis"
+        <EditText
+            android:id="@+id/text_input"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="AVIS  AVIS    AVIS    AVIS" />
+            android:text="AVIS  AVIS    AVIS    AVIS"
+            android:inputType="text"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
 
     </LinearLayout>
 

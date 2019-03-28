@@ -4,6 +4,10 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +32,7 @@ public class CreateAvisFragment extends Fragment {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+    private View root = null;
 
     public CreateAvisFragment() {
         // Required empty public constructor
@@ -63,8 +68,9 @@ public class CreateAvisFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        root = inflater.inflate(R.layout.fragment_create_avis, container, false);
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_create_avis, container, false);
+        return root;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
