@@ -24,6 +24,9 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.List;
 
@@ -49,7 +52,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleA
     private OnFragmentInteractionListener mListener;
     private GoogleApiClient mGoogleApiClient = null;
 
-    private static int REQUEST_LOCATION=1;
+    private static int REQUEST_LOCATION = 1;
     private Location mLastLocation;
     private boolean mRequestingLocationUpdates;
     private LocationRequest mLocationRequest;
@@ -95,8 +98,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleA
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_map, container, false);
+        View root = inflater.inflate(R.layout.fragment_map, container, false);
+        SupportMapFragment mapFragment =
+                (SupportMapFragment)
+                        getChildFragmentManager().findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
+        return root;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -124,32 +131,45 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleA
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        mGoogleApiClient.connect();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        mGoogleApiClient.disconnect();
+    }
+
+    @Override
     public void onConnected(@Nullable Bundle bundle) {
         if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
             requestLocationPermission();
         } else {
-            mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
-                    mGoogleApiClient);
+            mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
             if (mLastLocation != null) {
                 String lats = "" + mLastLocation.getLatitude();
                 String longs = "" + mLastLocation.getLongitude();
                 Toast.makeText(getActivity(), lats + " " + longs, Toast.LENGTH_LONG).show();
+
             }
         }
-        if (mRequestingLocationUpdates){
-            startLocationUpdates();
-        }else {
-            stopLocationUpdates();
-        }
+    }
 
+    private void requestLocationPermission() {
+        ActivityCompat.requestPermissions(
+                getActivity(),
+                new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                REQUEST_LOCATION);
     }
 
     @Override
     public void onResume() {
         super.onResume();
         setLocationParameters();
-        if (mGoogleApiClient.isConnected()){
+        if (mGoogleApiClient.isConnected()) {
             if (mRequestingLocationUpdates) {
                 startLocationUpdates();
             } else {
@@ -159,16 +179,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleA
     }
 
 
-    private void requestLocationPermission(){
-        ActivityCompat.requestPermissions(
-                getActivity(),
-                new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                REQUEST_LOCATION);
-    }
-
     private void setLocationParameters() {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        boolean myBool = preferences.getBoolean(getResources().getString(R.string.key_location_switch) , false);
+        boolean myBool = preferences.getBoolean(getResources().getString(R.string.key_location_switch), false);
         int valueDelay = Integer.parseInt(preferences.getString(getResources().getString(R.string.key_search_delay), "10"));
         mRequestingLocationUpdates = myBool;
         mLocationRequest = LocationRequest.create();
@@ -186,6 +199,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleA
                     mGoogleApiClient, mLocationRequest, (LocationListener) this);
         }
     }
+
     protected void stopLocationUpdates() {
         LocationServices.FusedLocationApi.removeLocationUpdates(
                 mGoogleApiClient, (LocationListener) this);
@@ -203,6 +217,15 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleA
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
+        String lats = "";
+        String longs = "";
+        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+        LatLng pos = new LatLng(mLastLocation.getLatitude(),mLastLocation.getLongitude());
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        googleMap.addMarker(new MarkerOptions().alpha(0.5f).position(pos).title(sharedPref.getString(getResources().getString(R.string.key_name),"John Smith")));
 
     }
 
