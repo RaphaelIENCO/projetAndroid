@@ -40,6 +40,8 @@ CreateAvisFragment.OnFragmentInteractionListener{
 //                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
 //                        .setAction("Action", null).show();
                 fragment = new CreateAvisFragment();
+                fm = getSupportFragmentManager();
+                fm.beginTransaction().replace(R.id.content_main,fragment).commit();
             }
         });
 
