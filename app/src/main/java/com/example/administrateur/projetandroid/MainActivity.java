@@ -20,6 +20,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
@@ -32,19 +33,30 @@ public class MainActivity extends AppCompatActivity
 MapFragment.OnFragmentInteractionListener,
 CreateAvisFragment.OnFragmentInteractionListener{
 
-    private FragmentManager fm = null;
-    private Fragment fragment = null;
+    private static FragmentManager fm = null;
+    private static Fragment fragment = null;
 
-    private List<Avis> avisList = new ArrayList<>();
+    private static List<Avis> avisList = new ArrayList<>();
     public RecyclerView recyclerView;
     private AppAvisbase appdb;
-    private AvisDAO avisDAO;
+    private static AvisDAO avisDAO;
     private Spinner spinnerRegion;
-    private AvisDAO avisDAO2;
-    private RestaurantDAO restaurantDAO;
+    private static AvisDAO avisDAO2;
+    private static RestaurantDAO restaurantDAO;
     private AppRestaurantsbase appdbRes;
     String[] lRestaurant;
-    private List<Restaurant> restaurantList = new ArrayList<>();
+    private static List<Restaurant> restaurantList = new ArrayList<>();
+
+    public static void addAvis(Avis avis) {
+        Avis avisAdd = avis;
+        (new InsertAsyncTaskAvis(avisDAO)).execute(avisAdd);
+        (new GetAllAvisAsyncTask(avisDAO)).execute();
+        (new GetAllAvisAsyncTask(avisDAO2)).execute();
+        (new GetAllRestaurantsAsyncTask(restaurantDAO)).execute();
+
+//        fragment = new HomeFragment();
+//        fm.beginTransaction().replace(R.id.content_main,fragment).commit();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -173,6 +185,11 @@ CreateAvisFragment.OnFragmentInteractionListener{
 
     }
 
+//    public void addAvis(Avis avis){
+//        Avis avisAdd = avis;
+//        (new InsertAsyncTaskAvis(avisDAO)).execute(avisAdd);
+//    }
+
     private void prepareRestaurant() {
         Restaurant restaurant1, restaurant2, restaurant3, restaurant4;
         restaurant1 = new Restaurant("Manhattan",47.6414,6.856098);
@@ -212,7 +229,7 @@ CreateAvisFragment.OnFragmentInteractionListener{
         (new InsertAsyncTaskAvis(avisDAO2)).execute(avis1, avis2, avis3, avis4, avis5, avis6);
     }
 
-    private class InsertAsyncTaskAvis extends AsyncTask<Avis, Void, Void> {
+    private static class InsertAsyncTaskAvis extends AsyncTask<Avis, Void, Void> {
         private AvisDAO dao;
         InsertAsyncTaskAvis(AvisDAO dao) {
             this.dao = dao;
@@ -242,7 +259,7 @@ CreateAvisFragment.OnFragmentInteractionListener{
         }
     }
 
-    private class GetAllAvisAsyncTask extends AsyncTask<Void,Void,Void> {
+    private static class GetAllAvisAsyncTask extends AsyncTask<Void,Void,Void> {
         private AvisDAO mAsyncTaskDao;
         ArrayList<Avis> avis;
 
@@ -261,7 +278,7 @@ CreateAvisFragment.OnFragmentInteractionListener{
         }
     }
 
-    private class GetAllRestaurantsAsyncTask extends AsyncTask<Void,Void,Void> {
+    private static class GetAllRestaurantsAsyncTask extends AsyncTask<Void,Void,Void> {
         private RestaurantDAO mAsyncTaskDao;
         ArrayList<Restaurant> restaurants;
 

@@ -1,16 +1,31 @@
 package com.example.administrateur.projetandroid;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import java.util.Date;
+
+import static android.content.Context.INPUT_METHOD_SERVICE;
 
 
 /**
@@ -33,6 +48,19 @@ public class CreateAvisFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
     private View root = null;
+    private EditText noteTxtV;
+    private EditText avisTxtV;
+    private int note;
+    private String date;
+    private String name;
+    private String avis;
+
+    public final static String Restau = "com.example.administrateur.projetandroid.Restau";
+    public final static String Name = "com.example.administrateur.projetandroid.Name";
+    public final static String Date = "com.example.administrateur.projetandroid.Date";
+    public final static String Note = "com.example.administrateur.projetandroid.Note";
+    public final static String AvisN = "com.example.administrateur.projetandroid.Avis";
+
 
     public CreateAvisFragment() {
         // Required empty public constructor
@@ -69,6 +97,36 @@ public class CreateAvisFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         root = inflater.inflate(R.layout.fragment_create_avis, container, false);
+
+        Date d=new Date();
+        date = d.getDate()+" / "+(d.getMonth()+1)+" / "+(d.getYear()+1900);
+
+        Button bouton = root.findViewById(R.id.button_create);
+        bouton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                noteTxtV = root.findViewById(R.id.note_input);
+                avisTxtV = root.findViewById(R.id.text_input);
+                note = Integer.parseInt(noteTxtV.getText().toString());
+                avis = avisTxtV.getText().toString();
+                SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                name = sharedPref.getString(getResources().getString(R.string.key_name),"John Smith");
+                Avis newAvis = new Avis("Le Millénium",name, date, note, avis);
+
+                MainActivity.addAvis(newAvis);
+
+                FragmentManager fm = getFragmentManager();
+                Fragment f = new HomeFragment();
+                if (fm != null) {
+                    fm.beginTransaction().replace(R.id.content_main,f).commit();
+                }
+
+//                InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                Toast.makeText(getContext(),"Avis enregistré",Toast.LENGTH_LONG).show();
+
+            }
+        });
+
         // Inflate the layout for this fragment
         return root;
     }
