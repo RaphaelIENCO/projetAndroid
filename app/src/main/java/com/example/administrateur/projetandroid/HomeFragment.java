@@ -86,6 +86,17 @@ public class HomeFragment extends Fragment {
         isLocationEnable += locationEnabled ? "True" : "False";
         tv_loc_enabled_out = (TextView) root.findViewById(R.id.text_location_switch_out);
         tv_loc_enabled_out.setText(isLocationEnable);
+
+        sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        String delayValue = sharedPref.getString(getResources().getString(R.string.key_search_delay),
+                "123");
+        String string_delay = ": ";
+        string_delay += delayValue;
+
+        String radiusValue = sharedPref.getString(getResources().getString(R.string.key_search_radius),
+                "123");
+        String string_radius = ": ";
+        string_radius += radiusValue;
     }
     @Override
     public void onResume(){
