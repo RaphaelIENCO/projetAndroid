@@ -83,6 +83,13 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleA
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        if (mGoogleApiClient == null) {
+            mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
+                    .addConnectionCallbacks(this)
+                    .addOnConnectionFailedListener(this)
+                    .addApi(LocationServices.API)
+                    .build();
+        }
     }
 
     @Override
@@ -137,6 +144,20 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleA
         }
 
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        setLocationParameters();
+        if (mGoogleApiClient.isConnected()){
+            if (mRequestingLocationUpdates) {
+                startLocationUpdates();
+            } else {
+                stopLocationUpdates();
+            }
+        }
+    }
+
 
     private void requestLocationPermission(){
         ActivityCompat.requestPermissions(
