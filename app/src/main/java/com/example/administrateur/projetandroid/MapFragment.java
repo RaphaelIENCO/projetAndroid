@@ -58,6 +58,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleA
     private boolean mRequestingLocationUpdates;
     private LocationRequest mLocationRequest;
     private MarkerOptions myMarker;
+    private double maLat;
+    private double maLong;
 
     public MapFragment() {
         // Required empty public constructor
@@ -154,6 +156,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleA
             if (mLastLocation != null) {
                 String lats = "" + mLastLocation.getLatitude();
                 String longs = "" + mLastLocation.getLongitude();
+                maLat = mLastLocation.getLatitude();
+                maLong = mLastLocation.getLongitude();
                 Toast.makeText(getActivity(), lats + " " + longs, Toast.LENGTH_LONG).show();
                 LatLng vous = new LatLng(mLastLocation.getLatitude(),mLastLocation.getLongitude());
                 myMarker = new MarkerOptions().position(vous).title("Vous");
@@ -230,19 +234,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleA
         googleMap.addMarker(new MarkerOptions().alpha(1f).position(pos).title("Vous"));
         */
         //googleMap.addMarker(myMarker);
-
-        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
-            requestLocationPermission();
-        } else {
-            mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-            if (mLastLocation != null) {
-                LatLng vous = new LatLng(mLastLocation.getLatitude(),mLastLocation.getLongitude());
-                myMarker = new MarkerOptions().position(vous).title("Vous");
-                googleMap.addMarker(myMarker);
-
-            }
-        }
+        LatLng vous = new LatLng(maLat, maLong);
+        googleMap.addMarker(new MarkerOptions().position(vous).title("Vous"));
+        googleMap.moveCamera(CameraUpdateFactory.newLatLng(vous));
+        googleMap.moveCamera(CameraUpdateFactory.zoomTo(10));
 
     }
 
