@@ -26,6 +26,19 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="@string/pref_title_localisation" />
+        <TextView
+            android:id="@+id/text_location_switch_out"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:text="@string/pref_search_delay_edit_text" />
         <TextView
             android:id="@+id/text_search_delay_out"
