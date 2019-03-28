@@ -114,9 +114,6 @@ CreateAvisFragment.OnFragmentInteractionListener{
             case R.id.nav_avis:
                 fragment = new AvisFragment();
                 break;
-            case R.id.nav_credits:
-//                fragment = new CreditsFragment();
-                break;
             default:
         }
 
