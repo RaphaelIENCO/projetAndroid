@@ -172,7 +172,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleA
                 maLong = mLastLocation.getLongitude();
                 Toast.makeText(getActivity(), lats + " " + longs, Toast.LENGTH_LONG).show();
                 LatLng vous = new LatLng(mLastLocation.getLatitude(),mLastLocation.getLongitude());
-                myMarker = new MarkerOptions().position(vous).title("Vous");
+                SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                myMarker = new MarkerOptions().position(vous).title(sharedPref.getString(getResources().getString(R.string.key_name),"John Smith"));
                 gMap.addMarker(myMarker);
 
                 gMap.moveCamera(CameraUpdateFactory.newLatLng(vous));
@@ -241,6 +242,14 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleA
     @Override
     public void onMapReady(GoogleMap googleMap) {
         gMap = googleMap;
+
+        for(Restaurant r: restaurantList){
+            LatLng pos = new LatLng(r.getLatitude(),r.getLongitude());
+            myMarker = new MarkerOptions().position(pos).title(r.getNom());
+            gMap.addMarker(myMarker);
+
+        }
+
     }
 
     /**
