@@ -26,7 +26,9 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.List;
@@ -60,6 +62,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleA
     private MarkerOptions myMarker;
     private double maLat;
     private double maLong;
+    private GoogleMap gMap;
+    private Marker marker;
 
     public MapFragment() {
         // Required empty public constructor
@@ -161,7 +165,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleA
                 Toast.makeText(getActivity(), lats + " " + longs, Toast.LENGTH_LONG).show();
                 LatLng vous = new LatLng(mLastLocation.getLatitude(),mLastLocation.getLongitude());
                 myMarker = new MarkerOptions().position(vous).title("Vous");
-
+                gMap.addMarker(myMarker);
             }
         }
     }
@@ -234,10 +238,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleA
         googleMap.addMarker(new MarkerOptions().alpha(1f).position(pos).title("Vous"));
         */
         //googleMap.addMarker(myMarker);
-        LatLng vous = new LatLng(maLat, maLong);
-        googleMap.addMarker(new MarkerOptions().position(vous).title("Vous"));
-        googleMap.moveCamera(CameraUpdateFactory.newLatLng(vous));
-        googleMap.moveCamera(CameraUpdateFactory.zoomTo(10));
+        gMap = googleMap;
+//        LatLng vous = new LatLng(maLat, maLong);
+//        googleMap.addMarker(new MarkerOptions().position(vous).title("Vous"));
+//        googleMap.moveCamera(CameraUpdateFactory.newLatLng(vous));
+//        googleMap.moveCamera(CameraUpdateFactory.zoomTo(10));
 
     }
 
