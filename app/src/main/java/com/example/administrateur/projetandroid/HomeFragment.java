@@ -93,21 +93,21 @@ public class HomeFragment extends Fragment {
         String string_delay = ": ";
         string_delay += delayValue;
         tv_loc_enabled_out = (TextView) root.findViewById(R.id.text_search_delay_out);
-        tv_loc_enabled_out.setText(isLocationEnable);
+        tv_loc_enabled_out.setText(string_delay);
 
         String radiusValue = sharedPref.getString(getResources().getString(R.string.key_search_radius),
                 "123");
         String string_radius = ": ";
         string_radius += radiusValue;
         tv_loc_enabled_out = (TextView) root.findViewById(R.id.text_search_radius_out);
-        tv_loc_enabled_out.setText(isLocationEnable);
+        tv_loc_enabled_out.setText(string_radius);
 
         String name = sharedPref.getString(getResources().getString(R.string.pref_title_display_name),
                 "John Smith");
         String string_name = ": ";
         string_name += name;
         tv_loc_enabled_out = (TextView) root.findViewById(R.id.text_name);
-        tv_loc_enabled_out.setText(isLocationEnable);
+        tv_loc_enabled_out.setText(string_name);
     }
     @Override
     public void onResume(){
