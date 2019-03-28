@@ -51,6 +51,10 @@ public class AvisFragment extends Fragment {
     private AvisDAO avisDAO;
     private Spinner spinnerRegion;
     private AvisDAO avisDAO2;
+    private RestaurantDAO restaurantDAO;
+    private AppRestaurantsbase appdbRes;
+    String[] lRestaurant;
+    private List<Restaurant> restaurantList = new ArrayList<>();
 
     public AvisFragment() {
         // Required empty public constructor
@@ -88,13 +92,6 @@ public class AvisFragment extends Fragment {
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_my_avis, container, false);
 
-        spinnerRegion = (Spinner) v.findViewById(R.id.spinnerRegion);
-        String[] lRegion={"Manhattan","Le Millénium"};
-        ArrayAdapter<String> dataAdapterR = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item,lRegion);
-        dataAdapterR.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerRegion.setAdapter(dataAdapterR);
-
-
         recyclerView = v.findViewById(R.id.avis_recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -102,8 +99,12 @@ public class AvisFragment extends Fragment {
                 LinearLayoutManager.VERTICAL));
 //        recyclerView.setAdapter(new AvisListAdapteur(avisList));
         appdb = AppAvisbase.getAvisbase(getContext());
+        appdbRes = AppRestaurantsbase.getRestaurantsbase(getContext());
+
         avisDAO = appdb.avisDAO();
         avisDAO2 = appdb.avisDAO();
+
+        restaurantDAO = appdbRes.restaurantDAO();
 //        prepareCharacterData();
 
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
@@ -111,10 +112,20 @@ public class AvisFragment extends Fragment {
 
 //        sp.edit().putBoolean(getResources().getString(R.string.key_is_db_initialized),true).apply();
         if (! sp.getBoolean(getResources().getString(R.string.key_is_db_initialized),false)) {
+            prepareRestaurant();
             prepareCharacterData();
             prepareCharacterData2();
             sp.edit().putBoolean(getResources().getString(R.string.key_is_db_initialized),true).apply();
         }
+
+        lRestaurant = new String[]{"Manhattan", "Le Millénium"};
+        (new GetAllRestaurantsAsyncTask(restaurantDAO)).execute();
+
+        spinnerRegion = (Spinner) v.findViewById(R.id.spinnerRegion);
+
+//        ArrayAdapter<String> dataAdapterR = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item,lRestaurant);
+//        dataAdapterR.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//        spinnerRegion.setAdapter(dataAdapterR);
 
 
         spinnerRegion.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
@@ -124,7 +135,7 @@ public class AvisFragment extends Fragment {
                 if (myRegion.equals("Manhattan")){
                     (new GetAllAvisAsyncTask(avisDAO, myRegion)).execute();
 
-                }else {
+                }else if (myRegion.equals("Le Millénium")){
                     (new GetAllAvisAsyncTask(avisDAO2, myRegion)).execute();
                 }
             }
@@ -140,6 +151,16 @@ public class AvisFragment extends Fragment {
         return v;
     }
 
+    private void prepareRestaurant() {
+        Restaurant restaurant1, restaurant2, restaurant3, restaurant4;
+        restaurant1 = new Restaurant("Manhattan",47.6414,06.856098);
+        restaurant2 = new Restaurant("Le Millénium",47.638194,6.855091);
+        restaurant3 = new Restaurant("Eatside",47.646401,6.854729);
+        restaurant4 = new Restaurant("Los Tacos",47.653115,6.851338);
+
+        (new InsertAsyncTaskRestaurants(restaurantDAO)).execute(restaurant1, restaurant2, restaurant3, restaurant4);
+    }
+
     private void prepareCharacterData() {
         Avis avis1, avis2, avis3, avis4, avis5, avis6;
         avis1 = new Avis("Manhattan","toto", "12/02/2019", 7,"Excellent service , rapidité efficacité  avec des pizzas diverses et de meilleures goût.\n" +
@@ -150,7 +171,7 @@ public class AvisFragment extends Fragment {
         avis4 = new Avis("Manhattan","Pascal", "30/03/2019", 8,"Les pizza sont bonne,mais la relation client et pas top,personnel souvent froid,ne répond pas au appel par moment,mais les prix sont corrects et on se régale a chaque fois");
         avis5 = new Avis("Manhattan","Pierre", "21/01/2019", 7,"Super tacos, rapport qualité-prix excellent");
         avis6 = new Avis("Manhattan","Sandrine", "17/10/2018", 7,"Très bon rapport qualité prix lieu propre est service rapide");
-        (new InsertAsyncTask(avisDAO)).execute(avis1, avis2, avis3, avis4, avis5, avis6);
+        (new InsertAsyncTaskAvis(avisDAO)).execute(avis1, avis2, avis3, avis4, avis5, avis6);
     }
 
     private void prepareCharacterData2() {
@@ -166,7 +187,7 @@ public class AvisFragment extends Fragment {
         avis4 = new Avis("Le Millénium","Raph", "30/03/2019", 8,"Accueil sympathique et service au top. J'ai testé leur Kebab suite à sa réputation qui est excellente et justifiée. \nParfait pour se restaurer rapidement.");
         avis5 = new Avis("Le Millénium","Claude", "21/01/2019", 7,"On y mange très bien, personnel à l'écoute parfois un peu d'attente mais je pense que c'est pareil ailleurs");
         avis6 = new Avis("Le Millénium","Karine", "17/10/2018", 7,"service rapide et de qualité");
-        (new InsertAsyncTask(avisDAO2)).execute(avis1, avis2, avis3, avis4, avis5, avis6);
+        (new InsertAsyncTaskAvis(avisDAO2)).execute(avis1, avis2, avis3, avis4, avis5, avis6);
     }
 
 
@@ -209,9 +230,9 @@ public class AvisFragment extends Fragment {
         void onFragmentInteraction(Uri uri);
     }
 
-    private class InsertAsyncTask extends AsyncTask<Avis, Void, Void> {
+    private class InsertAsyncTaskAvis extends AsyncTask<Avis, Void, Void> {
         private AvisDAO dao;
-        InsertAsyncTask(AvisDAO dao) {
+        InsertAsyncTaskAvis(AvisDAO dao) {
             this.dao = dao;
         }
 
@@ -219,6 +240,21 @@ public class AvisFragment extends Fragment {
         protected Void doInBackground(Avis... avis) {
             for (Avis a : avis) {
                 this.dao.insertAvis(a);
+            }
+            return null;
+        }
+    }
+
+    private class InsertAsyncTaskRestaurants extends AsyncTask<Restaurant, Void, Void> {
+        private RestaurantDAO dao;
+        InsertAsyncTaskRestaurants(RestaurantDAO dao) {
+            this.dao = dao;
+        }
+
+        @Override
+        protected Void doInBackground(Restaurant... restaurants) {
+            for (Restaurant r : restaurants){
+                this.dao.insertRestaurant(r);
             }
             return null;
         }
@@ -251,6 +287,33 @@ public class AvisFragment extends Fragment {
             avisList=listTemp;
             listTemp=null;
             recyclerView.setAdapter(new AvisListAdapteur(avisList,getContext()));
+        }
+    }
+
+    private class GetAllRestaurantsAsyncTask extends AsyncTask<Void,Void,Void> {
+        private RestaurantDAO mAsyncTaskDao;
+        ArrayList<Restaurant> restaurants;
+
+        GetAllRestaurantsAsyncTask(RestaurantDAO dao){
+            this.mAsyncTaskDao = dao;
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            restaurants = new ArrayList<>(mAsyncTaskDao.getAllRestaurant());
+            return null;
+        }
+        @Override
+        protected void onPostExecute(Void voids){
+            restaurantList = restaurants;
+            lRestaurant = new String[restaurantList.size()];
+            for (int i=0;i<restaurantList.size();i++){
+                lRestaurant[i] = restaurantList.get(i).getNom();
+            }
+            ArrayAdapter<String> dataAdapterR = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item,lRestaurant);
+            dataAdapterR.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            spinnerRegion.setAdapter(dataAdapterR);
+//            recyclerView.setAdapter(new AvisListAdapteur(avisList,getContext()));
         }
     }
 
