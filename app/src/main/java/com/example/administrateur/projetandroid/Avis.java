@@ -12,6 +12,9 @@ public class Avis {
     @PrimaryKey(autoGenerate = true)
     private int aid;
 
+    @ColumnInfo(name = "restaurant")
+    private String restaurant;
+
     @ColumnInfo(name = "username")
     private String username;
 
@@ -64,19 +67,37 @@ public class Avis {
         this.username = username;
     }
 
+    public String getRestaurant() {
+        return restaurant;
+    }
+
+    public void setRestaurant(String restaurant) {
+        this.restaurant = restaurant;
+    }
+
     @Ignore
-    public Avis(int aid, String username, String date, int note, String avis) {
+    public Avis(int aid, String restaurant, String username, String date, int note, String avis) {
         this.aid = aid;
+        this.restaurant = restaurant;
         this.username = username;
         this.date = date;
         this.note = note;
         this.avis = avis;
     }
 
-    public Avis(String username, String date, int note, String avis) {
+    public Avis(String restaurant, String username, String date, int note, String avis) {
+        this.restaurant = restaurant;
         this.username = username;
         this.date = date;
         this.note = note;
         this.avis = avis;
+    }
+
+    @Override
+    public String toString() {
+        return "Avis{" +
+                "restaurant='" + restaurant + '\'' +
+                ", username='" + username + '\'' +
+                '}';
     }
 }

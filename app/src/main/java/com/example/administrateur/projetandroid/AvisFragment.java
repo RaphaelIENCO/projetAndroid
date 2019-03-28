@@ -1,5 +1,6 @@
 package com.example.administrateur.projetandroid;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -14,6 +15,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,9 +46,11 @@ public class AvisFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
 
     private List<Avis> avisList = new ArrayList<>();
-    private RecyclerView recyclerView;
+    public RecyclerView recyclerView;
     private AppAvisbase appdb;
     private AvisDAO avisDAO;
+    private Spinner spinnerRegion;
+    private AvisDAO avisDAO2;
 
     public AvisFragment() {
         // Required empty public constructor
@@ -80,6 +87,14 @@ public class AvisFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_my_avis, container, false);
+
+        spinnerRegion = (Spinner) v.findViewById(R.id.spinnerRegion);
+        String[] lRegion={"Manhattan","Le Millénium"};
+        ArrayAdapter<String> dataAdapterR = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item,lRegion);
+        dataAdapterR.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerRegion.setAdapter(dataAdapterR);
+
+
         recyclerView = v.findViewById(R.id.avis_recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -88,30 +103,70 @@ public class AvisFragment extends Fragment {
 //        recyclerView.setAdapter(new AvisListAdapteur(avisList));
         appdb = AppAvisbase.getAvisbase(getContext());
         avisDAO = appdb.avisDAO();
+        avisDAO2 = appdb.avisDAO();
 //        prepareCharacterData();
 
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
+
+//        sp.edit().putBoolean(getResources().getString(R.string.key_is_db_initialized),true).apply();
         if (! sp.getBoolean(getResources().getString(R.string.key_is_db_initialized),false)) {
             prepareCharacterData();
-            sp.edit().putBoolean(getResources().getString(R.string.key_is_db_initialized),true).commit();
+            prepareCharacterData2();
+            sp.edit().putBoolean(getResources().getString(R.string.key_is_db_initialized),true).apply();
         }
 
-        (new GetAllAvisAsyncTask(avisDAO)).execute();
+
+        spinnerRegion.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
+            public void onItemSelected(AdapterView<?> parent, View view,
+                                       int position, long id) {
+                String myRegion = String.valueOf(spinnerRegion.getSelectedItem());
+                if (myRegion.equals("Manhattan")){
+                    (new GetAllAvisAsyncTask(avisDAO, myRegion)).execute();
+
+                }else {
+                    (new GetAllAvisAsyncTask(avisDAO2, myRegion)).execute();
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                // TODO Auto-generated method stub
+            }
+
+        });
+
+//        (new GetAllAvisAsyncTask(avisDAO)).execute();
         return v;
     }
 
     private void prepareCharacterData() {
         Avis avis1, avis2, avis3, avis4, avis5, avis6;
-        avis1 = new Avis("toto", "12/02/2019", 7,"Excellent service , rapidité efficacité  avec des pizzas diverses et de meilleures goût.\n" +
+        avis1 = new Avis("Manhattan","toto", "12/02/2019", 7,"Excellent service , rapidité efficacité  avec des pizzas diverses et de meilleures goût.\n" +
                 "Bref excellent rapport prix qualité.\n" +
                 "A recommandé");
-        avis2 = new Avis("bob", "02/02/2019", 6,"Franchement avant c'était super livraison à l'heure qualité au rendez-vous maintenant c'est médiocre .. pizza arrive cramé , sec avec des ingrédients qui manque .. livraison super longue .. j'hesite à plus y aller");
-        avis3 = new Avis("Jean", "15/02/2019", 5,"Bon accueil");
-        avis4 = new Avis("Pascal", "30/03/2019", 8,"Les pizza sont bonne,mais la relation client et pas top,personnel souvent froid,ne répond pas au appel par moment,mais les prix sont corrects et on se régale a chaque fois");
-        avis5 = new Avis("Pierre", "21/01/2019", 7,"Super tacos, rapport qualité-prix excellent");
-        avis6 = new Avis("Sandrine", "17/10/2018", 7,"Très bon rapport qualité prix lieu propre est service rapide");
+        avis2 = new Avis("Manhattan","bob", "02/02/2019", 6,"Franchement avant c'était super livraison à l'heure qualité au rendez-vous maintenant c'est médiocre .. pizza arrive cramé , sec avec des ingrédients qui manque .. livraison super longue .. j'hesite à plus y aller");
+        avis3 = new Avis("Manhattan","Jean", "15/02/2019", 5,"Bon accueil");
+        avis4 = new Avis("Manhattan","Pascal", "30/03/2019", 8,"Les pizza sont bonne,mais la relation client et pas top,personnel souvent froid,ne répond pas au appel par moment,mais les prix sont corrects et on se régale a chaque fois");
+        avis5 = new Avis("Manhattan","Pierre", "21/01/2019", 7,"Super tacos, rapport qualité-prix excellent");
+        avis6 = new Avis("Manhattan","Sandrine", "17/10/2018", 7,"Très bon rapport qualité prix lieu propre est service rapide");
         (new InsertAsyncTask(avisDAO)).execute(avis1, avis2, avis3, avis4, avis5, avis6);
+    }
+
+    private void prepareCharacterData2() {
+        Avis avis1, avis2, avis3, avis4, avis5, avis6;
+        avis1 = new Avis("Le Millénium","Dimitri", "12/02/2019", 7,"On y mange bien et le personnel est très sympathique !");
+        avis2 = new Avis("Le Millénium","Paul", "02/02/2019", 6,"Franchement avant c'était super livraison à l'heure qualité au rendez-vous maintenant c'est médiocre .. pizza arrive cramé , sec avec des ingrédients qui manque .. livraison super longue .. j'hesite à plus y aller");
+        avis3 = new Avis("Le Millénium","Alexis", "15/02/2019", 3,"Tres déçu du Millenium.\n" +
+                "Je ne savais pas que les propriétaires avaient changé .\n" +
+                "Pain mou , plus du tout croustillant .\n" +
+                "Quasiment pas de sauces dans les sandwichs .\n" +
+                "La qualite a fortement  baissé , je n'y retournerai pas.\n" +
+                "Point positif : le personnel est très agreable");
+        avis4 = new Avis("Le Millénium","Raph", "30/03/2019", 8,"Accueil sympathique et service au top. J'ai testé leur Kebab suite à sa réputation qui est excellente et justifiée. \nParfait pour se restaurer rapidement.");
+        avis5 = new Avis("Le Millénium","Claude", "21/01/2019", 7,"On y mange très bien, personnel à l'écoute parfois un peu d'attente mais je pense que c'est pareil ailleurs");
+        avis6 = new Avis("Le Millénium","Karine", "17/10/2018", 7,"service rapide et de qualité");
+        (new InsertAsyncTask(avisDAO2)).execute(avis1, avis2, avis3, avis4, avis5, avis6);
     }
 
 
@@ -172,9 +227,11 @@ public class AvisFragment extends Fragment {
     private class GetAllAvisAsyncTask extends AsyncTask<Void,Void,Void> {
         private AvisDAO mAsyncTaskDao;
         ArrayList<Avis> avis;
+        String restaurant;
 
-        GetAllAvisAsyncTask(AvisDAO dao){
+        GetAllAvisAsyncTask(AvisDAO dao, String restaurant){
             this.mAsyncTaskDao = dao;
+            this.restaurant = restaurant;
         }
 
         @Override
@@ -185,6 +242,14 @@ public class AvisFragment extends Fragment {
         @Override
         protected void onPostExecute(Void voids){
             avisList = avis;
+            ArrayList<Avis> listTemp = new ArrayList<>();
+            for (Avis a: avis){
+                if (a.getRestaurant().equals(restaurant)) {
+                    listTemp.add(a);
+                }
+            }
+            avisList=listTemp;
+            listTemp=null;
             recyclerView.setAdapter(new AvisListAdapteur(avisList,getContext()));
         }
     }

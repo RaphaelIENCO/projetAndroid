@@ -29,9 +29,9 @@ public class AvisListAdapteur extends RecyclerView.Adapter<AvisViewHolder> {
     @Override
     public void onBindViewHolder( AvisViewHolder holder, int i) {
         Avis avis = avisList.get(i);
-        holder.username.setText(avis.getUsername());
-        holder.note.setText(""+avis.getNote());
-        holder.date.setText(avis.getDate());
+        holder.username.setText(avis.getUsername()+",");
+        holder.note.setText(avis.getNote()+"/10,");
+        holder.date.setText(avis.getDate()+" :");
         holder.avis.setText(avis.getAvis());
     }
 
