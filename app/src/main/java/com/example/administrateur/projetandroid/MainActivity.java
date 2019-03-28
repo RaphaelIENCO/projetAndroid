@@ -22,7 +22,7 @@ public class MainActivity extends AppCompatActivity
         AvisFragment.OnFragmentInteractionListener{
 
     private FragmentManager fm = null;
-    private Fragment fragment = new HomeFragment();
+    private Fragment fragment = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +51,9 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         fm = getSupportFragmentManager();
+        fragment = new HomeFragment();
+        fm.beginTransaction().replace(R.id.content_main,fragment).commit();
+
     }
 
     @Override
@@ -93,6 +96,8 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
+
+        fragment = new HomeFragment();
 
 
         switch(id){

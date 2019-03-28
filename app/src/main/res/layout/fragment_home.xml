@@ -14,7 +14,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/pref_title_display_name" />
+            android:text="@string/bienvenue" />
         <TextView
             android:id="@+id/text_name"
             android:layout_width="wrap_content"
