@@ -1,14 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".CreateAvisFragment">
-
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="wrap_content">
 
-</FrameLayout>
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical">
+            <TextView
+                android:text="Note  "
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:paddingRight="@dimen/nav_header_vertical_spacing"
+                android:id="@+id/text_view_note"/>
+            <EditText
+                android:id="@+id/note_input"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:inputType="number"/>
+            <TextView
+                android:text="Date  "
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:paddingRight="@dimen/nav_header_vertical_spacing"
+                android:id="@+id/text_view_date"/>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/text_view_avis"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="AVIS  AVIS    AVIS    AVIS" />
+
+    </LinearLayout>
+
+</LinearLayout>

@@ -186,7 +186,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             // to their values. When their values change, their summaries are
             // updated to reflect the new value, per the Android Design
             // guidelines.
-            bindPreferenceSummaryToValue(findPreference("example_text"));
+            bindPreferenceSummaryToValue(findPreference(getResources().getString(R.string.key_name)));
             bindPreferenceSummaryToValue(findPreference(getResources().getString(R.string.key_search_radius)));
             bindPreferenceSummaryToValue(findPreference(getResources().getString(R.string.key_search_delay)));
         }
