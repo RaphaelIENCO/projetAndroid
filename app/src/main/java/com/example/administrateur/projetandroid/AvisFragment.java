@@ -153,7 +153,7 @@ public class AvisFragment extends Fragment {
 
     private void prepareRestaurant() {
         Restaurant restaurant1, restaurant2, restaurant3, restaurant4;
-        restaurant1 = new Restaurant("Manhattan",47.6414,06.856098);
+        restaurant1 = new Restaurant("Manhattan",47.6414,6.856098);
         restaurant2 = new Restaurant("Le Millénium",47.638194,6.855091);
         restaurant3 = new Restaurant("Eatside",47.646401,6.854729);
         restaurant4 = new Restaurant("Los Tacos",47.653115,6.851338);
