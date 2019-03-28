@@ -10,17 +10,14 @@
             android:title="@string/home" />
         <item
             android:id="@+id/nav_map"
-            android:icon="@drawable/ic_map_black_24dp"
+            android:icon="@drawable/ic_map"
             android:title="@string/map" />
 
         <item
             android:id="@+id/nav_avis"
-            android:icon="@drawable/ic_menu_slideshow"
+            android:icon="@drawable/ic_avis_fast_food"
             android:title="@string/avis" />
-        <item
-            android:id="@+id/nav_credits"
-            android:icon="@drawable/ic_radio_button_unchecked_black_24dp"
-            android:title="@string/credits" />
+
     </group>
 
 
