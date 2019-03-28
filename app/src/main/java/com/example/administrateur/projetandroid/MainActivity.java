@@ -152,7 +152,7 @@ CreateAvisFragment.OnFragmentInteractionListener{
                 fragment = new HomeFragment();
                 break;
             case R.id.nav_map:
-                fragment = new MapFragment();
+                fragment = new MapFragment(restaurantList);
                 break;
             case R.id.nav_avis:
                 fragment = new AvisFragment(avisList, restaurantList);

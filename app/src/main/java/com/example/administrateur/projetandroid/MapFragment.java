@@ -1,6 +1,7 @@
 package com.example.administrateur.projetandroid;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -65,8 +66,15 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleA
     private GoogleMap gMap;
     private Marker marker;
 
+    private List<Restaurant> restaurantList;
+
     public MapFragment() {
         // Required empty public constructor
+    }
+
+    @SuppressLint("ValidFragment")
+    public MapFragment(List<Restaurant> restaurantList){
+        this.restaurantList = restaurantList;
     }
 
     /**
@@ -166,6 +174,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleA
                 LatLng vous = new LatLng(mLastLocation.getLatitude(),mLastLocation.getLongitude());
                 myMarker = new MarkerOptions().position(vous).title("Vous");
                 gMap.addMarker(myMarker);
+
                 gMap.moveCamera(CameraUpdateFactory.newLatLng(vous));
                 gMap.moveCamera(CameraUpdateFactory.zoomTo(10));
             }
