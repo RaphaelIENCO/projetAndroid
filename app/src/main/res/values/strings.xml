@@ -81,5 +81,6 @@
 
     <string name="key_is_db_initialized">key_is_db_initialized</string>
     <string name="bienvenue">Bienvenue,</string>
+    <string name="descriptionAppli">Cette application vous permet de trouver les fast food les plus proches de vous,leurs notes,leurs avis. Vous pouvez égallement déposer un avis sur les fast food autour de vous.</string>
 
 </resources>
