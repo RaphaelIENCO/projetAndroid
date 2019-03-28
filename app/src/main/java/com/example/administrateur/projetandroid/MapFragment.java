@@ -22,6 +22,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -56,6 +57,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleA
     private Location mLastLocation;
     private boolean mRequestingLocationUpdates;
     private LocationRequest mLocationRequest;
+    private MarkerOptions myMarker;
 
     public MapFragment() {
         // Required empty public constructor
@@ -153,6 +155,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleA
                 String lats = "" + mLastLocation.getLatitude();
                 String longs = "" + mLastLocation.getLongitude();
                 Toast.makeText(getActivity(), lats + " " + longs, Toast.LENGTH_LONG).show();
+                LatLng vous = new LatLng(mLastLocation.getLatitude(),mLastLocation.getLongitude());
+                myMarker = new MarkerOptions().position(vous).title("Vous");
 
             }
         }
@@ -217,15 +221,28 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleA
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        String lats = "";
-        String longs = "";
+        /*
         if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
         mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
         LatLng pos = new LatLng(mLastLocation.getLatitude(),mLastLocation.getLongitude());
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        googleMap.addMarker(new MarkerOptions().alpha(0.5f).position(pos).title(sharedPref.getString(getResources().getString(R.string.key_name),"John Smith")));
+        googleMap.addMarker(new MarkerOptions().alpha(1f).position(pos).title("Vous"));
+        */
+        //googleMap.addMarker(myMarker);
+
+        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            requestLocationPermission();
+        } else {
+            mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+            if (mLastLocation != null) {
+                LatLng vous = new LatLng(mLastLocation.getLatitude(),mLastLocation.getLongitude());
+                myMarker = new MarkerOptions().position(vous).title("Vous");
+                googleMap.addMarker(myMarker);
+
+            }
+        }
 
     }
 
