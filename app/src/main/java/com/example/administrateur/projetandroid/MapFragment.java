@@ -166,6 +166,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleA
                 LatLng vous = new LatLng(mLastLocation.getLatitude(),mLastLocation.getLongitude());
                 myMarker = new MarkerOptions().position(vous).title("Vous");
                 gMap.addMarker(myMarker);
+                gMap.moveCamera(CameraUpdateFactory.newLatLng(vous));
+                gMap.moveCamera(CameraUpdateFactory.zoomTo(10));
             }
         }
     }
@@ -229,21 +231,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleA
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        /*
-        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return;
-        }
-        mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-        LatLng pos = new LatLng(mLastLocation.getLatitude(),mLastLocation.getLongitude());
-        googleMap.addMarker(new MarkerOptions().alpha(1f).position(pos).title("Vous"));
-        */
-        //googleMap.addMarker(myMarker);
         gMap = googleMap;
-//        LatLng vous = new LatLng(maLat, maLong);
-//        googleMap.addMarker(new MarkerOptions().position(vous).title("Vous"));
-//        googleMap.moveCamera(CameraUpdateFactory.newLatLng(vous));
-//        googleMap.moveCamera(CameraUpdateFactory.zoomTo(10));
-
     }
 
     /**
