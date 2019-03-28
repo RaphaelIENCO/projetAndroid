@@ -19,7 +19,9 @@ import android.view.MenuItem;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
-        AvisFragment.OnFragmentInteractionListener, CreateAvisFragment.OnFragmentInteractionListener{
+        AvisFragment.OnFragmentInteractionListener,
+MapFragment.OnFragmentInteractionListener,
+CreateAvisFragment.OnFragmentInteractionListener{
 
     private FragmentManager fm = null;
     private Fragment fragment = null;
@@ -37,10 +39,7 @@ public class MainActivity extends AppCompatActivity
             public void onClick(View view) {
 //                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
 //                        .setAction("Action", null).show();
-
                 fragment = new CreateAvisFragment();
-                fm = getSupportFragmentManager();
-                fm.beginTransaction().replace(R.id.content_main,fragment).commit();
             }
         });
 
@@ -103,13 +102,12 @@ public class MainActivity extends AppCompatActivity
         fragment = new HomeFragment();
 
 
-
         switch(id){
             case R.id.nav_home:
                 fragment = new HomeFragment();
                 break;
             case R.id.nav_map:
-//                fragment = new MyMapFragment();
+                fragment = new MapFragment();
                 break;
             case R.id.nav_avis:
                 fragment = new AvisFragment();
