@@ -102,8 +102,7 @@ public class HomeFragment extends Fragment {
         tv_loc_enabled_out = (TextView) root.findViewById(R.id.text_search_radius_out);
         tv_loc_enabled_out.setText(string_radius);
 
-        String name = sharedPref.getString(getResources().getString(R.string.pref_title_display_name),
-                "John Smith");
+        String name = sharedPref.getString(getResources().getString(R.string.key_name),"");
         String string_name = ": ";
         string_name += name;
         tv_loc_enabled_out = (TextView) root.findViewById(R.id.text_name);
