@@ -26,6 +26,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -60,6 +61,7 @@ public class CreateAvisFragment extends Fragment {
     private String avis;
     private List<Restaurant> restaurantList;
     private Spinner spinnerRestaurant;
+    private Spinner spinnerNote;
     private String[] lRestaurant;
     private String myRegion;
 
@@ -126,6 +128,24 @@ public class CreateAvisFragment extends Fragment {
 
         });
 
+        spinnerNote = (Spinner) root.findViewById(R.id.spinner_note_create);
+        String[] lNote = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"};
+        ArrayAdapter<String> dataAdapterN = new ArrayAdapter<String>(getContext(),android.R.layout.simple_spinner_item, lNote);
+        dataAdapterN.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerNote.setAdapter(dataAdapterN);
+
+        spinnerNote.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                note = Integer.parseInt(String.valueOf(spinnerNote.getSelectedItem()));
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
         Date d=new Date();
         date = d.getDate()+" / "+(d.getMonth()+1)+" / "+(d.getYear()+1900);
 
@@ -133,9 +153,7 @@ public class CreateAvisFragment extends Fragment {
         bouton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                noteTxtV = root.findViewById(R.id.note_input);
                 avisTxtV = root.findViewById(R.id.text_input);
-                note = Integer.parseInt(noteTxtV.getText().toString());
                 avis = avisTxtV.getText().toString();
                 SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
                 name = sharedPref.getString(getResources().getString(R.string.key_name),"John Smith");
