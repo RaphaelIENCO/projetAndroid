@@ -87,20 +87,33 @@ public class HomeFragment extends Fragment {
         tv_loc_enabled_out = (TextView) root.findViewById(R.id.text_location_switch_out);
         tv_loc_enabled_out.setText(isLocationEnable);
 
-        sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        String delayValue = sharedPref.getString(getResources().getString(R.string.key_search_delay),
-                "123");
-        String string_delay = ": ";
-        string_delay += delayValue;
-        tv_loc_enabled_out = (TextView) root.findViewById(R.id.text_search_delay_out);
-        tv_loc_enabled_out.setText(string_delay);
+        if (locationEnabled) {
 
-        String radiusValue = sharedPref.getString(getResources().getString(R.string.key_search_radius),
-                "123");
-        String string_radius = ": ";
-        string_radius += radiusValue;
-        tv_loc_enabled_out = (TextView) root.findViewById(R.id.text_search_radius_out);
-        tv_loc_enabled_out.setText(string_radius);
+            sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+            String delayValue = sharedPref.getString(getResources().getString(R.string.key_search_delay),
+                    "123");
+            String string_delay = ": ";
+            string_delay += delayValue;
+            tv_loc_enabled_out = (TextView) root.findViewById(R.id.text_search_delay_out);
+            tv_loc_enabled_out.setText(string_delay);
+
+            String radiusValue = sharedPref.getString(getResources().getString(R.string.key_search_radius),
+                    "123");
+            String string_radius = ": ";
+            string_radius += radiusValue;
+            tv_loc_enabled_out = (TextView) root.findViewById(R.id.text_search_radius_out);
+            tv_loc_enabled_out.setText(string_radius);
+        } else {
+            String string_delay = ": ";
+
+            tv_loc_enabled_out = (TextView) root.findViewById(R.id.text_search_delay_out);
+            tv_loc_enabled_out.setText(string_delay);
+
+
+            String string_radius = ": ";
+            tv_loc_enabled_out = (TextView) root.findViewById(R.id.text_search_radius_out);
+            tv_loc_enabled_out.setText(string_radius);
+        }
 
         String name = sharedPref.getString(getResources().getString(R.string.key_name),"John Smith");
         String string_name = " ";

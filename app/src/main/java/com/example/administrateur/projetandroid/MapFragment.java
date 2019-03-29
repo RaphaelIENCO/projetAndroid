@@ -177,14 +177,19 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleA
                 gMap.addMarker(myMarker);
 
                 for(Restaurant r: restaurantList){
-                    String radiusValue = sharedPref.getString(getResources().getString(R.string.key_search_radius),
-                            "123");
-                    double radius = Double.parseDouble(radiusValue);
+                    Boolean locationEnabled =
+                            sharedPref.getBoolean(getResources().getString(R.string.key_location_switch), false);
+                    if (locationEnabled) {
+                        String radiusValue = sharedPref.getString(getResources().getString(R.string.key_search_radius),
+                                "123");
+                        double radius = Double.parseDouble(radiusValue);
 
-                    if (distance(r.getLatitude(), maLat, r.getLongitude(), maLong)<=radius) {
-                        LatLng pos = new LatLng(r.getLatitude(),r.getLongitude());
-                        myMarker = new MarkerOptions().position(pos).title(r.getNom());
-                        gMap.addMarker(myMarker);
+                        if (distance(r.getLatitude(), maLat, r.getLongitude(), maLong) <= radius) {
+
+                            afficheMarker(r);
+                        }
+                    }else {
+                        afficheMarker(r);
                     }
 
                 }
@@ -193,6 +198,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleA
                 gMap.moveCamera(CameraUpdateFactory.zoomTo(10));
             }
         }
+    }
+
+    private void afficheMarker(Restaurant r) {
+        LatLng pos = new LatLng(r.getLatitude(), r.getLongitude());
+        myMarker = new MarkerOptions().position(pos).title(r.getNom());
+        gMap.addMarker(myMarker);
     }
 
     private void requestLocationPermission() {
