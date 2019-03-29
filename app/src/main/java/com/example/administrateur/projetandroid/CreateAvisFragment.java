@@ -63,7 +63,7 @@ public class CreateAvisFragment extends Fragment {
     private Spinner spinnerRestaurant;
     private Spinner spinnerNote;
     private String[] lRestaurant;
-    private String myRegion;
+    private String myRestaurant;
 
 
     public CreateAvisFragment() {
@@ -118,7 +118,7 @@ public class CreateAvisFragment extends Fragment {
         spinnerRestaurant.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parent, View view,
                                        int position, long id) {
-                myRegion = String.valueOf(spinnerRestaurant.getSelectedItem());
+                myRestaurant = String.valueOf(spinnerRestaurant.getSelectedItem());
             }
 
             @Override
@@ -157,7 +157,7 @@ public class CreateAvisFragment extends Fragment {
                 avis = avisTxtV.getText().toString();
                 SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
                 name = sharedPref.getString(getResources().getString(R.string.key_name),"John Smith");
-                Avis newAvis = new Avis(myRegion,name, date, note, avis);
+                Avis newAvis = new Avis(myRestaurant,name, date, note, avis);
 
                 MainActivity.addAvis(newAvis);
 
