@@ -15,6 +15,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
@@ -105,6 +106,13 @@ public class AvisFragment extends Fragment {
                 LinearLayoutManager.VERTICAL));
         recyclerView.setAdapter(new AvisListAdapteur(avisList, getContext()));
 
+        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        View view = getActivity().getCurrentFocus();
+        if (view == null) {
+            view = new View(getActivity());
+        }
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
         sp.edit().putBoolean(getResources().getString(R.string.key_is_db_initialized), true).apply();
@@ -114,7 +122,7 @@ public class AvisFragment extends Fragment {
         }
 
         lRestaurant = getNameRestaurants(restaurantList);
-        spinnerRegion = (Spinner) v.findViewById(R.id.spinnerRegion);
+        spinnerRegion = (Spinner) v.findViewById(R.id.spinner_restaurant);
 
         ArrayAdapter<String> dataAdapterR = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, lRestaurant);
         dataAdapterR.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -125,11 +133,7 @@ public class AvisFragment extends Fragment {
             public void onItemSelected(AdapterView<?> parent, View view,
                                        int position, long id) {
                 String myRegion = String.valueOf(spinnerRegion.getSelectedItem());
-                if (myRegion.equals("Manhattan")) {
-                    getAvisByRestaurant("Manhattan");
-                } else if (myRegion.equals("Le Millénium")) {
-                    getAvisByRestaurant("Le Millénium");
-                }
+                getAvisByRestaurant(myRegion);
             }
 
             @Override
@@ -145,7 +149,7 @@ public class AvisFragment extends Fragment {
 
     private String[] getNameRestaurants(List<Restaurant> restaurantList) {
         String[] names = new String[restaurantList.size()];
-        for (int i=0;i<restaurantList.size();i++){
+        for (int i = 0; i < restaurantList.size(); i++) {
             names[i] = restaurantList.get(i).getNom();
         }
 

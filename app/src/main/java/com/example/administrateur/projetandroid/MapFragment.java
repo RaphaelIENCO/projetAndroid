@@ -16,6 +16,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -115,6 +116,15 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleA
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_map, container, false);
+
+        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        View view = getActivity().getCurrentFocus();
+        if (view == null) {
+            view = new View(getActivity());
+        }
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+
+
         SupportMapFragment mapFragment =
                 (SupportMapFragment)
                         getChildFragmentManager().findFragmentById(R.id.map);
@@ -173,12 +183,14 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleA
                 Toast.makeText(getActivity(), lats + " " + longs, Toast.LENGTH_LONG).show();
                 LatLng vous = new LatLng(mLastLocation.getLatitude(),mLastLocation.getLongitude());
                 SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
-                myMarker = new MarkerOptions().position(vous).title(sharedPref.getString(getResources().getString(R.string.key_name),"John Smith"));
-                gMap.addMarker(myMarker);
+                Boolean locationEnabled =
+                        sharedPref.getBoolean(getResources().getString(R.string.key_location_switch), false);
+                if (locationEnabled) {
+                    myMarker = new MarkerOptions().position(vous).title(sharedPref.getString(getResources().getString(R.string.key_name), "John Smith"));
+                    gMap.addMarker(myMarker);
+                }
 
                 for(Restaurant r: restaurantList){
-                    Boolean locationEnabled =
-                            sharedPref.getBoolean(getResources().getString(R.string.key_location_switch), false);
                     if (locationEnabled) {
                         String radiusValue = sharedPref.getString(getResources().getString(R.string.key_search_radius),
                                 "123");

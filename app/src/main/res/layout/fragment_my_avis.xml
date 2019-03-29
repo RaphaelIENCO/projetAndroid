@@ -7,7 +7,7 @@
     tools:context=".AvisFragment">
 
     <Spinner
-        android:id="@+id/spinnerRegion"
+        android:id="@+id/spinner_restaurant"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         />

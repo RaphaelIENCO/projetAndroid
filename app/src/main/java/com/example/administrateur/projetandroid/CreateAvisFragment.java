@@ -18,12 +18,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.Date;
+import java.util.List;
 
 import static android.content.Context.INPUT_METHOD_SERVICE;
 
@@ -54,16 +58,19 @@ public class CreateAvisFragment extends Fragment {
     private String date;
     private String name;
     private String avis;
-
-    public final static String Restau = "com.example.administrateur.projetandroid.Restau";
-    public final static String Name = "com.example.administrateur.projetandroid.Name";
-    public final static String Date = "com.example.administrateur.projetandroid.Date";
-    public final static String Note = "com.example.administrateur.projetandroid.Note";
-    public final static String AvisN = "com.example.administrateur.projetandroid.Avis";
+    private List<Restaurant> restaurantList;
+    private Spinner spinnerRegion;
+    private String[] lRestaurant;
+    private String myRegion;
 
 
     public CreateAvisFragment() {
         // Required empty public constructor
+    }
+
+    @SuppressLint("ValidFragment")
+    public CreateAvisFragment(List<Restaurant> restaurantList){
+        this.restaurantList = restaurantList;
     }
 
     /**
@@ -98,6 +105,27 @@ public class CreateAvisFragment extends Fragment {
                              Bundle savedInstanceState) {
         root = inflater.inflate(R.layout.fragment_create_avis, container, false);
 
+        spinnerRegion = (Spinner) root.findViewById(R.id.spinnerRestaurant_create);
+
+
+        lRestaurant = getNameRestaurants(restaurantList);
+        ArrayAdapter<String> dataAdapterR = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, lRestaurant);
+        dataAdapterR.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerRegion.setAdapter(dataAdapterR);
+
+        spinnerRegion.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            public void onItemSelected(AdapterView<?> parent, View view,
+                                       int position, long id) {
+                myRegion = String.valueOf(spinnerRegion.getSelectedItem());
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                // TODO Auto-generated method stub
+            }
+
+        });
+
         Date d=new Date();
         date = d.getDate()+" / "+(d.getMonth()+1)+" / "+(d.getYear()+1900);
 
@@ -111,7 +139,7 @@ public class CreateAvisFragment extends Fragment {
                 avis = avisTxtV.getText().toString();
                 SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
                 name = sharedPref.getString(getResources().getString(R.string.key_name),"John Smith");
-                Avis newAvis = new Avis("Le Millénium",name, date, note, avis);
+                Avis newAvis = new Avis(myRegion,name, date, note, avis);
 
                 MainActivity.addAvis(newAvis);
 
@@ -121,7 +149,15 @@ public class CreateAvisFragment extends Fragment {
                     fm.beginTransaction().replace(R.id.content_main,f).commit();
                 }
 
-//                InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+
+                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                View view = getActivity().getCurrentFocus();
+                //If no view currently has focus, create a new one, just so we can grab a window token from it
+                if (view == null) {
+                    view = new View(getActivity());
+                }
+                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+
                 Toast.makeText(getContext(),"Avis enregistré",Toast.LENGTH_LONG).show();
 
             }
@@ -129,6 +165,15 @@ public class CreateAvisFragment extends Fragment {
 
         // Inflate the layout for this fragment
         return root;
+    }
+
+    private String[] getNameRestaurants(List<Restaurant> restaurantList) {
+        String[] names = new String[restaurantList.size()];
+        for (int i=0;i<restaurantList.size();i++){
+            names[i] = restaurantList.get(i).getNom();
+        }
+
+        return names;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
