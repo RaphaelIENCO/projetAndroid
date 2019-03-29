@@ -37,14 +37,11 @@ CreateAvisFragment.OnFragmentInteractionListener{
     private static Fragment fragment = null;
 
     private static List<Avis> avisList = new ArrayList<>();
-    public RecyclerView recyclerView;
     private AppAvisbase appdb;
     private static AvisDAO avisDAO;
-    private Spinner spinnerRegion;
     private static AvisDAO avisDAO2;
     private static RestaurantDAO restaurantDAO;
     private AppRestaurantsbase appdbRes;
-    String[] lRestaurant;
     private static List<Restaurant> restaurantList = new ArrayList<>();
 
     public static void addAvis(Avis avis) {
@@ -53,9 +50,6 @@ CreateAvisFragment.OnFragmentInteractionListener{
         (new GetAllAvisAsyncTask(avisDAO)).execute();
         (new GetAllAvisAsyncTask(avisDAO2)).execute();
         (new GetAllRestaurantsAsyncTask(restaurantDAO)).execute();
-
-//        fragment = new HomeFragment();
-//        fm.beginTransaction().replace(R.id.content_main,fragment).commit();
     }
 
     @Override
@@ -103,8 +97,6 @@ CreateAvisFragment.OnFragmentInteractionListener{
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
                 fragment = new CreateAvisFragment(restaurantList);
                 fm = getSupportFragmentManager();
                 fm.beginTransaction().replace(R.id.content_main,fragment).commit();
@@ -187,10 +179,6 @@ CreateAvisFragment.OnFragmentInteractionListener{
 
     }
 
-//    public void addAvis(Avis avis){
-//        Avis avisAdd = avis;
-//        (new InsertAsyncTaskAvis(avisDAO)).execute(avisAdd);
-//    }
 
     private void prepareRestaurant() {
         Restaurant restaurant1, restaurant2, restaurant3, restaurant4;

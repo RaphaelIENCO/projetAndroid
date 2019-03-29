@@ -197,7 +197,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleA
                         double radius = Double.parseDouble(radiusValue);
 
                         if (distance(r.getLatitude(), maLat, r.getLongitude(), maLong) <= radius) {
-
                             afficheMarker(r);
                         }
                     }else {

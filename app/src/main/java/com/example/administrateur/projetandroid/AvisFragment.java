@@ -48,12 +48,7 @@ public class AvisFragment extends Fragment {
 
     private List<Avis> avisList = new ArrayList<>();
     public RecyclerView recyclerView;
-    private AppAvisbase appdb;
-    private AvisDAO avisDAO;
-    private Spinner spinnerRegion;
-    private AvisDAO avisDAO2;
-    private RestaurantDAO restaurantDAO;
-    private AppRestaurantsbase appdbRes;
+    private Spinner spinnerRestaurant;
     String[] lRestaurant;
     private List<Restaurant> restaurantList = new ArrayList<>();
 
@@ -122,18 +117,18 @@ public class AvisFragment extends Fragment {
         }
 
         lRestaurant = getNameRestaurants(restaurantList);
-        spinnerRegion = (Spinner) v.findViewById(R.id.spinner_restaurant);
+        spinnerRestaurant = (Spinner) v.findViewById(R.id.spinner_restaurant);
 
         ArrayAdapter<String> dataAdapterR = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, lRestaurant);
         dataAdapterR.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerRegion.setAdapter(dataAdapterR);
+        spinnerRestaurant.setAdapter(dataAdapterR);
 
 
-        spinnerRegion.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        spinnerRestaurant.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parent, View view,
                                        int position, long id) {
-                String myRegion = String.valueOf(spinnerRegion.getSelectedItem());
-                getAvisByRestaurant(myRegion);
+                String myRestaurant = String.valueOf(spinnerRestaurant.getSelectedItem());
+                getAvisByRestaurant(myRestaurant);
             }
 
             @Override

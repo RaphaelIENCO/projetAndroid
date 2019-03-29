@@ -59,7 +59,7 @@ public class CreateAvisFragment extends Fragment {
     private String name;
     private String avis;
     private List<Restaurant> restaurantList;
-    private Spinner spinnerRegion;
+    private Spinner spinnerRestaurant;
     private String[] lRestaurant;
     private String myRegion;
 
@@ -105,18 +105,18 @@ public class CreateAvisFragment extends Fragment {
                              Bundle savedInstanceState) {
         root = inflater.inflate(R.layout.fragment_create_avis, container, false);
 
-        spinnerRegion = (Spinner) root.findViewById(R.id.spinnerRestaurant_create);
+        spinnerRestaurant = (Spinner) root.findViewById(R.id.spinnerRestaurant_create);
 
 
         lRestaurant = getNameRestaurants(restaurantList);
         ArrayAdapter<String> dataAdapterR = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, lRestaurant);
         dataAdapterR.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerRegion.setAdapter(dataAdapterR);
+        spinnerRestaurant.setAdapter(dataAdapterR);
 
-        spinnerRegion.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        spinnerRestaurant.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parent, View view,
                                        int position, long id) {
-                myRegion = String.valueOf(spinnerRegion.getSelectedItem());
+                myRegion = String.valueOf(spinnerRestaurant.getSelectedItem());
             }
 
             @Override
